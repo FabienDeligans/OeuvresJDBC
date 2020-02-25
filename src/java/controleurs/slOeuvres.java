@@ -120,6 +120,14 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
 
+            int id = (Integer) request.getAttribute("id"); 
+            
+            OeuvreDao oeuvreDao = new OeuvreDao(); 
+            Oeuvre oeuvre = null; 
+            oeuvre = oeuvreDao.rechercher(id); 
+            
+            request.setAttribute("OeuvreR", oeuvre);
+            
             vueReponse = "/oeuvre.jsp";
             return (vueReponse);
         } catch (Exception e) {
@@ -138,6 +146,7 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
 
+            
             vueReponse = "catalogue.oe";
             return (vueReponse);
         } catch (Exception e) {

@@ -24,11 +24,11 @@
                     <td>${lst.getProprietaire().prenom_proprietaire}</td>
                     <td>${lst.getProprietaire().nom_proprietaire}</td>
                     <c:if test="${userId == 1 }">
-                        <td><a class="btn btn-primary" href="">Réserver</a></td>
-                        <td><a class="btn btn-primary" href="">Modifier</a></td> 
+                        <td><a class="btn btn-primary" href="reserver.res?id=${lst.id_oeuvre}">Réserver</a></td>
+                        <td><a class="btn btn-primary" href="modifier.oe?id=${lst.id_oeuvre}">Modifier</a></td> 
                         <td><a class="btn btn-primary" onclick="javascript:if (confirm('Suppression confirmée ?')) {
                                         window.location = '';
-                                    }">Supprimer</a></td>                     
+                                    }" href="supprimer.oe?id=${lst.id_oeuvre}">Supprimer</a></td>                     
                         </c:if>
                 </tr>
             </c:forEach>

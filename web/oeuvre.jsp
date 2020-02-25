@@ -5,13 +5,13 @@
         <div class="form-group">
             <label class="col-md-3 control-label">Titre : </label>
             <div class="col-md-6">
-                <input type="text" name="txtTitre" value="" class="form-control" placeholder="Titre de l'oeuvre" required autofocus>
+                <input type="text" name="txtTitre" value="${oeuvreR.titre}" class="form-control" placeholder="Titre de l'oeuvre" required autofocus>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 control-label">Prix : </label>
             <div class="col-md-3">
-                <input type="text" name="txtPrix" value=""  class="form-control" placeholder="Prix de l'oeuvre" required>
+                <input type="text" name="txtPrix" value="${oeuvreR.prix}"  class="form-control" placeholder="Prix de l'oeuvre" required>
             </div>
         </div>
         <div class="form-group">
