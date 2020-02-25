@@ -5,7 +5,10 @@
 
 package controleurs;
 
+import dal.ReservationDao;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,12 +33,12 @@ public class slReservation extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
 
-    private String erreur, titre, date;
+    private String erreur, titre, date, vueReponse;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String demande;
-        String vueReponse = "/home.jsp";
+        vueReponse = "/home.jsp";
         erreur = "";
         try {
             demande = getDemande(request);
@@ -99,6 +102,20 @@ public class slReservation extends HttpServlet {
         
         try {
 
+            vueReponse = "/index.jsp"; 
+            
+            HttpSession session = request.getSession(false); 
+            int id = (Integer) session.getAttribute("userId"); 
+            
+            Proprietaire proprio = new Proprietaire(); 
+            proprio.setId_proprietaire(id);
+            
+            if (proprio != null){
+                ReservationDao resaDao = new ReservationDao(); 
+                List<Reservation> lstReservations = new ArrayList(); 
+                lstReservations = resaDao.lister(lstReservations); 
+                request.setAttribute("lstReservationsR", lstReservations);
+            }
             
             return ("/listereservations.jsp");
         } catch (Exception e) {

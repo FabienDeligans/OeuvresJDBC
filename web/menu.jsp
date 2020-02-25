@@ -18,7 +18,9 @@
                             <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="catalogue.oe">Lister</a></li>
-                                <li><a href="ajouter.oe">Ajouter</a></li>
+                                    <c:if test="${sessionScope.userId == 1}">
+                                    <li><a href="ajouter.oe">Ajouter</a></li>
+                                    </c:if>
                             </ul>
                         </li>                           
                     </ul> 
@@ -29,10 +31,10 @@
                 <ul class="nav navbar-nav navbar-right"> 
                     <c:if test="${sessionScope.userId != null}">
                         <li><a href="deconnecter.oe">Se déconnecter</a></li>
-                    </c:if>  
-                    <c:if test="${sessionScope.userId == null}">                   
+                        </c:if>  
+                        <c:if test="${sessionScope.userId == null}">                   
                         <li><a href="login.oe">Se connecter</a></li>
-                    </c:if>  
+                        </c:if>  
                 </ul>
             </div>
         </div>

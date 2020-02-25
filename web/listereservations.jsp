@@ -8,22 +8,28 @@
                 <td>Titre</td>
                 <td>Date</td>
                 <td>Statut</td>
-                <td>Prénom adhérent</td>
-                <td>Nom adhérent</td>
-                <td>Confirmer</td>
-                <td>Supprimer</td>
+                <c:if test="${userId == 1 }">
+                    <td>Prénom adhérent</td>
+                    <td>Nom adhérent</td>
+                    <td>Confirmer</td>
+                    <td>Supprimer</td>
+                </c:if>
+
             </tr>
         </thead>
         <tbody>
-            <c:forEach >
+            <c:forEach var ="lst" items="${lstReservationsR}">
                 <tr>
-                    <td></td>
-                    <td><fmt:formatDate value="" type="date" pattern="yyyy-MM-dd"/></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a class="btn btn-primary" href="confirmerReservation.res?id= &dateres='<fmt:formatDate value="" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
-                    <td><a class="btn btn-primary" href="supprimerReservation.res?id= &dateres='<fmt:formatDate value=" " type="date" pattern="yyyy-MM-dd"/>'">Supprimer</a></td>                    
+                    <td>${lst.getOeuvre().titre}</td>
+                    <td><fmt:formatDate value="${lst.date_reservation}" type="date" pattern="dd-MM-yyyy"/></td>
+                    <td>${lst.statut}</td>
+                    <c:if test="${userId == 1 }">
+                        <td>${lst.getAdherent().prenom_adherent}</td>
+                        <td>${lst.getAdherent().nom_adherent}</td>
+                        <td><a class="btn btn-primary" href="confirmerReservation.res?id= &dateres='<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
+                        <td><a class="btn btn-primary" href="supprimerReservation.res?id= &dateres='<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>'">Supprimer</a></td>                    
+                    </c:if>
+
                 </tr>
             </c:forEach>                    
         </tbody>
