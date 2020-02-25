@@ -71,5 +71,42 @@ public class OeuvreDao {
             }
         }
     }
+
+    public void ajouter(String txtTitre, String txtPrix, String lProprietaires) throws Exception{
+
+        PreparedStatement ps = null; 
+        ResultSet rs = null; 
+        Connection connection = null; 
+        
+        try {
+            DbOutils dbOutils = new DbOutils(); 
+            connection = dbOutils.connecter(); 
+
+            ps = connection.prepareStatement("INSERT INTO oeuvre(id_proprietaire, titre, prix) VALUES (?, ?, ?)"); 
+            ps.setString(1, lProprietaires);
+            ps.setString(2, txtTitre);
+            ps.setString(3, txtPrix);
+            
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            throw e; 
+        } finally{
+            try {
+                if(ps != null){
+                    ps.close();
+                }
+                if(rs != null){
+                    rs.close();
+                }
+                if (connection != null){
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }
     
 }
