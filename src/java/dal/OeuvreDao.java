@@ -75,35 +75,40 @@ public class OeuvreDao {
     public void ajouter(String txtTitre, String txtPrix, String lProprietaires) throws Exception{
 
         PreparedStatement ps = null; 
-        ResultSet rs = null; 
         Connection connection = null; 
-        
+        Oeuvre oeuvre = new Oeuvre(); 
         try {
             DbOutils dbOutils = new DbOutils(); 
             connection = dbOutils.connecter(); 
-
-            ps = connection.prepareStatement("INSERT INTO oeuvre(id_proprietaire, titre, prix) VALUES (?, ?, ?)"); 
-            ps.setString(1, lProprietaires);
-            ps.setString(2, txtTitre);
-            ps.setString(3, txtPrix);
+            connection.setAutoCommit(false);; 
+            
+            oeuvre.setId_oeuvre(dbOutils.getidentifiant("oeuvre"));
+            oeuvre.setId_proprietaire(Integer.parseInt(lProprietaires));
+            oeuvre.setPrix(Double.parseDouble(txtPrix));
+            oeuvre.setTitre(txtTitre);
+            
+            ps = connection.prepareStatement("INSERT INTO oeuvre(id_proprietaire, titre, prix, id_oeuvre) VALUES (?, ?, ?, ?)"); 
+            ps.setInt(1, oeuvre.getId_proprietaire());
+            ps.setString(2, oeuvre.getTitre());
+            ps.setDouble(3, oeuvre.getPrix());
+            ps.setInt(4, oeuvre.getId_oeuvre());
             
             ps.executeUpdate();
-            
+            connection.commit();
+
         } catch (Exception e) {
+            connection.rollback();
             throw e; 
         } finally{
             try {
                 if(ps != null){
                     ps.close();
                 }
-                if(rs != null){
-                    rs.close();
-                }
                 if (connection != null){
                     connection.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
             }
         }
         

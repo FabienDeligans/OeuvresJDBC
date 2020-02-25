@@ -101,7 +101,8 @@ public class slOeuvres extends HttpServlet {
 
                 if (txtTitre != null && txtPrix != null && lProprietaires != null) {
                     oeuvreDao.ajouter(txtTitre, txtPrix, lProprietaires);
-                    vueReponse = "catalogue.oe";
+                    
+                    vueReponse = listerOeuvres(request);
                 }
                 
             }
