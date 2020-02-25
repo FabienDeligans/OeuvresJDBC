@@ -24,7 +24,7 @@ import modeles.Proprietaire;
  */
 public class slOeuvres extends HttpServlet {
 
-    private String erreur, titre;
+    private String erreur, titre, vueReponse;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -218,14 +218,28 @@ public class slOeuvres extends HttpServlet {
     private String listerOeuvres(HttpServletRequest request) throws Exception {
 
         try {
-
-            OeuvreDao oeuvreDao = new OeuvreDao(); 
-            List<Oeuvre>lstOeuvres = new ArrayList();  
-            lstOeuvres = oeuvreDao.lister(lstOeuvres); 
-            request.setAttribute("lstOeuvresR", lstOeuvres);
-            return ("/catalogue.jsp");
+            vueReponse = "/index.jsp"; 
+            
+            HttpSession session = request.getSession(false);
+            int id = (Integer)session.getAttribute("userId");
+            
+            Proprietaire proprio = new Proprietaire(); 
+            proprio.setId_proprietaire(id);
+            
+            
+            
+            if (proprio != null) {
+                OeuvreDao oeuvreDao = new OeuvreDao();
+                List<Oeuvre> lstOeuvres = new ArrayList();
+                lstOeuvres = oeuvreDao.lister(lstOeuvres);
+                request.setAttribute("lstOeuvresR", lstOeuvres);
+                vueReponse = ("/catalogue.jsp");
+            }
+            
         } catch (Exception e) {
-            throw e;
+            erreur = e.getMessage();
+        } finally {
+            return vueReponse; 
         }
     }
 
