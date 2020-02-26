@@ -135,18 +135,16 @@ public class slReservation extends HttpServlet {
 
         try {
 
-            String titre; 
-            String prix; 
-            String adhId; 
+            String id_oeuvre; 
+            String id_adherent; 
             String date; 
             
-            titre = request.getParameter("txtTitre"); 
-            prix = request.getParameter("tstPrix"); 
-            adhId = request.getParameter("lstAdherents"); 
+            id_oeuvre = request.getParameter("id_oeuvre"); 
+            id_adherent = request.getParameter("lstAdherents"); 
             date = request.getParameter("txtDate"); 
             
             ReservationDao resaDao = new ReservationDao(); 
-            resaDao.enregistrer(#####################################); 
+            resaDao.enregistrer(id_oeuvre, id_adherent, date); 
             
             return ("listeReservations.res");
         } catch (Exception e) {

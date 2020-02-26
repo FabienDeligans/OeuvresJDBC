@@ -6,7 +6,7 @@
         <div class="form-group">
             <label class="col-md-3 control-label">Titre : </label>
             <label class="col-md-6 form-control-static" name="txtTitre" >${resaR.oeuvre.titre}</label>
-            <input type="text" name="txtTitre" id="txtTitre" value="${resaR.oeuvre.titre}" hidden/>
+            <input type="text" name="id_oeuvre" id="id_oeuvre" value="${resaR.oeuvre.id_oeuvre}" hidden/>
 
         </div>
         <div class="form-group">

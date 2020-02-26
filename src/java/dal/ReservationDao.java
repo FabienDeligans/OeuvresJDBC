@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import modeles.Adherent;
 import modeles.Oeuvre;
 import modeles.Reservation;
+import outils.Utilitaire;
 
 /**
  *
@@ -140,28 +142,49 @@ public class ReservationDao {
 
     }
 
-    public void enregistrer(#####################################) {
+    public void enregistrer(String id_oeuvre, String id_adherent, String date) throws Exception{
 
         PreparedStatement ps = null;
-        ResultSet rs = null;
         Connection connection = null;
-        Reservation resa = new Reservation(); 
         try {
-            DbOutils dbOutils = new DbOutils(); 
-            connection = dbOutils.connecter(); 
+            Utilitaire outi = new Utilitaire();
+            Date datte = Utilitaire.StrToDate(date, "yyyy-MM-dd"); 
+            
+            DbOutils dbOutils = new DbOutils();
+            connection = dbOutils.connecter();
             connection.setAutoCommit(false);
-            
-            ps = connection.prepareStatement("insert into reservation "
-                    + "(date_reservation, id_oeuvre, id_adherent, satut)"
-                    + "values(?, ?, ?, ?"); 
-            ps.setDate(1, date);
-            ps.setInt(2, id_oeuvre);
-            ps.setInt(3, id_adherent); 
-            ps.setString(4, statut);
-            
-            
-        } catch (Exception e) {
 
+            ps = connection.prepareStatement("insert into reservation "
+                    + "(date_reservation, id_oeuvre, id_adherent, statut)"
+                    + "values(?, ?, ?, ?");
+            
+            /**
+             * 
+             * PAS au point la gestion des dates !
+             * 
+             */
+            ps.setDate(1, (java.sql.Date) datte);
+            ps.setInt(2, Integer.parseInt(id_oeuvre));
+            ps.setInt(3, Integer.parseInt(id_adherent));
+            ps.setString(4, "Attente");
+            
+            ps.executeUpdate(); 
+            connection.commit(); 
+
+        } catch (Exception e) {
+            connection.rollback();
+            throw e; 
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
 
     }
