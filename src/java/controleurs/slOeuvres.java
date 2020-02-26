@@ -38,23 +38,34 @@ public class slOeuvres extends HttpServlet {
         erreur = "";
         try {
             demande = getDemande(request);
+
             if (demande.equalsIgnoreCase("login.oe")) {
                 vueReponse = login(request);
             } else if (demande.equalsIgnoreCase("connecter.oe")) {
                 vueReponse = connecter(request);
             } else if (demande.equalsIgnoreCase("deconnecter.oe")) {
                 vueReponse = deconnecter(request);
-            } else if (demande.equalsIgnoreCase("ajouter.oe")) {
-                vueReponse = creerOeuvre(request);
-            } else if (demande.equalsIgnoreCase("enregistrer.oe")) {
-                vueReponse = enregistrerOeuvre(request);
-            } else if (demande.equalsIgnoreCase("modifier.oe")) {
-                vueReponse = modifierOeuvre(request);
             } else if (demande.equalsIgnoreCase("catalogue.oe")) {
                 vueReponse = listerOeuvres(request);
-            } else if (demande.equalsIgnoreCase("supprimer.oe")) {
-                vueReponse = supprimerOeuvre(request);
             }
+
+            HttpSession session = request.getSession(false);
+            int id = (Integer) session.getAttribute("userId");
+            Proprietaire proprio = new Proprietaire();
+            proprio.setId_proprietaire(id);
+
+            if (proprio.getId_proprietaire() == 1) {
+                if (demande.equalsIgnoreCase("ajouter.oe")) {
+                    vueReponse = creerOeuvre(request);
+                } else if (demande.equalsIgnoreCase("enregistrer.oe")) {
+                    vueReponse = enregistrerOeuvre(request);
+                } else if (demande.equalsIgnoreCase("modifier.oe")) {
+                    vueReponse = modifierOeuvre(request);
+                } else if (demande.equalsIgnoreCase("supprimer.oe")) {
+                    vueReponse = supprimerOeuvre(request);
+                }
+            }
+
         } catch (Exception e) {
             erreur = e.getMessage();
         } finally {
@@ -81,27 +92,20 @@ public class slOeuvres extends HttpServlet {
         String vueReponse = "/ajouter.oe";
         String txtTitre, txtPrix, lProprietaires;
         try {
-            HttpSession session = request.getSession(false);
-            int id = (Integer) session.getAttribute("userId");
 
-            Proprietaire proprio = new Proprietaire();
-            proprio.setId_proprietaire(id);
+            txtTitre = request.getParameter("txtTitre");
+            txtPrix = request.getParameter("txtPrix");
+            lProprietaires = request.getParameter("lProprietaires");
 
-            if (proprio.getId_proprietaire() == 1) {
+            OeuvreDao oeuvreDao = new OeuvreDao();
+            
+            if (txtTitre != null && txtPrix != null && lProprietaires != null) {
+                oeuvreDao.ajouter(txtTitre, txtPrix, lProprietaires);
 
-                txtTitre = request.getParameter("txtTitre");
-                txtPrix = request.getParameter("txtPrix");
-                lProprietaires = request.getParameter("lProprietaires");
-
-                OeuvreDao oeuvreDao = new OeuvreDao();
-
-                if (txtTitre != null && txtPrix != null && lProprietaires != null) {
-                    oeuvreDao.ajouter(txtTitre, txtPrix, lProprietaires);
-                    
-                    vueReponse = listerOeuvres(request);
-                }
+                vueReponse = "/catalogue.oe";
                 
             }
+
             return (vueReponse);
         } catch (Exception e) {
             throw e;
@@ -120,14 +124,19 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
 
-            int id =  Integer.parseInt(request.getParameter("id")); 
-            
-            OeuvreDao oeuvreDao = new OeuvreDao(); 
-            Oeuvre oeuvre = null; 
-            oeuvre = oeuvreDao.rechercher(id); 
-            
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            OeuvreDao oeuvreDao = new OeuvreDao();
+            Oeuvre oeuvre = null;
+            oeuvre = oeuvreDao.rechercher(id);
+
             request.setAttribute("oeuvreR", oeuvre);
-            
+
+            List<Proprietaire> lProprietaires = new ArrayList();
+            ProprietaireDao proprioDao = new ProprietaireDao();
+            lProprietaires = proprioDao.lister(lProprietaires);
+            request.setAttribute("lProprietairesR", lProprietaires);
+
             vueReponse = "/oeuvre.jsp";
             return (vueReponse);
         } catch (Exception e) {
@@ -146,6 +155,9 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
 
+            int id = Integer.parseInt(request.getParameter("id")); 
+            OeuvreDao oeuvreDao = new OeuvreDao(); 
+            oeuvreDao.supprimer(id); 
             
             vueReponse = "catalogue.oe";
             return (vueReponse);
@@ -168,25 +180,16 @@ public class slOeuvres extends HttpServlet {
      */
     private String creerOeuvre(HttpServletRequest request) throws Exception {
 
-        String vueReponse = "/index.jsp";
+        String vueReponse = "/home.jsp";
         try {
 
-            HttpSession session = request.getSession(false);
-            int id = (Integer) session.getAttribute("userId");
+            List<Proprietaire> lProprietaires = new ArrayList();
+            ProprietaireDao proprioDao = new ProprietaireDao();
+            lProprietaires = proprioDao.lister(lProprietaires);
 
-            Proprietaire proprio = new Proprietaire();
-            proprio.setId_proprietaire(id);
+            request.setAttribute("lProprietairesR", lProprietaires);
+            vueReponse = "/oeuvre.jsp";
 
-            if (proprio.getId_proprietaire() == 1) {
-
-                List<Proprietaire> lProprietaires = new ArrayList();
-                ProprietaireDao proprioDao = new ProprietaireDao();
-                lProprietaires = proprioDao.lister(lProprietaires);
-
-                request.setAttribute("lProprietairesR", lProprietaires);
-                vueReponse = "/oeuvre.jsp";
-
-            }
             return (vueReponse);
         } catch (Exception e) {
             throw e;
@@ -259,19 +262,11 @@ public class slOeuvres extends HttpServlet {
         try {
             vueReponse = "/index.jsp";
 
-            HttpSession session = request.getSession(false);
-            int id = (Integer) session.getAttribute("userId");
-
-            Proprietaire proprio = new Proprietaire();
-            proprio.setId_proprietaire(id);
-
-            if (proprio != null) {
-                OeuvreDao oeuvreDao = new OeuvreDao();
-                List<Oeuvre> lstOeuvres = new ArrayList();
-                lstOeuvres = oeuvreDao.lister(lstOeuvres);
-                request.setAttribute("lstOeuvresR", lstOeuvres);
-                vueReponse = ("/catalogue.jsp");
-            }
+            OeuvreDao oeuvreDao = new OeuvreDao();
+            List<Oeuvre> lstOeuvres = new ArrayList();
+            lstOeuvres = oeuvreDao.lister(lstOeuvres);
+            request.setAttribute("lstOeuvresR", lstOeuvres);
+            vueReponse = ("/catalogue.jsp");
 
         } catch (Exception e) {
             erreur = e.getMessage();

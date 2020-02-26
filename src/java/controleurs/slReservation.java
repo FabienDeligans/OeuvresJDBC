@@ -1,5 +1,8 @@
 package controleurs;
 
+import dal.AdherentDao;
+import dal.OeuvreDao;
+import dal.ProprietaireDao;
 import dal.ReservationDao;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,21 +20,21 @@ import modeles.*;
  *
  * @author alain
  */
-
 public class slReservation extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
     private String erreur, titre, date, vueReponse;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String demande;
         vueReponse = "/home.jsp";
         erreur = "";
@@ -52,17 +55,19 @@ public class slReservation extends HttpServlet {
             erreur = e.getMessage();
         } finally {
             request.setAttribute("erreurR", erreur);
-            request.setAttribute("pageR", vueReponse); 
+            request.setAttribute("pageR", vueReponse);
             RequestDispatcher dsp = request.getRequestDispatcher("/index.jsp");
-            if (vueReponse.contains(".res"))
+            if (vueReponse.contains(".res")) {
                 dsp = request.getRequestDispatcher(vueReponse);
+            }
             dsp.forward(request, response);
         }
     }
 
     /**
-     * Transforme dans la base de données une réservation en Attente
-     * en une réservation Confirmée
+     * Transforme dans la base de données une réservation en Attente en une
+     * réservation Confirmée
+     *
      * @param request
      * @return String page de redirection
      * @throws Exception
@@ -78,40 +83,41 @@ public class slReservation extends HttpServlet {
     }
 
     private String supprimerReservation(HttpServletRequest request) throws Exception {
-        
+
         try {
 
             return ("listeReservations.res");
-        } catch (Exception e) {         
+        } catch (Exception e) {
             throw e;
         }
-    }     
-    
+    }
+
     /**
      * liste des réservations en Attente
+     *
      * @param request
      * @return String page de redirection
      * @throws Exception
      */
     private String listeReservations(HttpServletRequest request) throws Exception {
-        
+
         try {
 
-            vueReponse = "/index.jsp"; 
-            
-            HttpSession session = request.getSession(false); 
-            int id = (Integer) session.getAttribute("userId"); 
-            
-            Proprietaire proprio = new Proprietaire(); 
+            vueReponse = "/index.jsp";
+
+            HttpSession session = request.getSession(false);
+            int id = (Integer) session.getAttribute("userId");
+
+            Proprietaire proprio = new Proprietaire();
             proprio.setId_proprietaire(id);
-            
-            if (proprio != null){
-                ReservationDao resaDao = new ReservationDao(); 
-                List<Reservation> lstReservations = new ArrayList(); 
-                lstReservations = resaDao.lister(lstReservations); 
+
+            if (proprio != null) {
+                ReservationDao resaDao = new ReservationDao();
+                List<Reservation> lstReservations = new ArrayList();
+                lstReservations = resaDao.lister(lstReservations);
                 request.setAttribute("lstReservationsR", lstReservations);
             }
-            
+
             return ("/listereservations.jsp");
         } catch (Exception e) {
             throw e;
@@ -120,33 +126,64 @@ public class slReservation extends HttpServlet {
 
     /**
      * Enregistre une réservation et la met en Attente
+     *
      * @param request
      * @return
      * @throws Exception
      */
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
-        
+
         try {
+
+            String titre; 
+            String prix; 
+            String adhId; 
+            String date; 
+            
+            titre = request.getParameter("txtTitre"); 
+            prix = request.getParameter("tstPrix"); 
+            adhId = request.getParameter("lstAdherents"); 
+            date = request.getParameter("txtDate"); 
+            
+            ReservationDao resaDao = new ReservationDao(); 
+            resaDao.enregistrer(#####################################); 
             
             return ("listeReservations.res");
         } catch (Exception e) {
             erreur = e.getMessage();
-            if(erreur.contains("PRIMARY"))
-                erreur = "L'oeuvre " + titre + " a déjà été réservée pour le : " + date + " !";            
+            if (erreur.contains("PRIMARY")) {
+                erreur = "L'oeuvre " + titre + " a déjà été réservée pour le : " + date + " !";
+            }
             throw new Exception(erreur);
         }
     }
 
     /**
-     * Lit une oeuvre, l'affiche et initialise la liste des adhérents
-     * pour pouvoir saisir une réservation :
-     * Saisie date et sélection de l'adhérent
+     * Lit une oeuvre, l'affiche et initialise la liste des adhérents pour
+     * pouvoir saisir une réservation : Saisie date et sélection de l'adhérent
+     *
      * @param request
      * @return
      * @throws Exception
      */
     private String reserverOeuvre(HttpServletRequest request) throws Exception {
         try {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            OeuvreDao oeuvreDao = new OeuvreDao(); 
+            Oeuvre oeuvre = new Oeuvre();
+            oeuvre = oeuvreDao.rechercher(id); 
+
+            Reservation resa = new Reservation(); 
+            resa.setId_oeuvre(id);
+            resa.setOeuvre(oeuvre);
+            
+            request.setAttribute("resaR", resa);
+
+            List<Adherent> lAdherents = new ArrayList();
+            AdherentDao adhDao = new AdherentDao();
+            lAdherents = adhDao.lister(lAdherents);
+            request.setAttribute("lAdherentsR", lAdherents);
             
             return ("/reservation.jsp");
         } catch (Exception e) {
@@ -156,6 +193,7 @@ public class slReservation extends HttpServlet {
 
     /**
      * Extrait le texte de la demande de l'URL
+     *
      * @param request
      * @return String texte de la demande
      */
@@ -167,8 +205,9 @@ public class slReservation extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -176,12 +215,13 @@ public class slReservation extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -189,12 +229,13 @@ public class slReservation extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

@@ -28,7 +28,8 @@ public class OeuvreDao {
             DbOutils dbOutils = new DbOutils();
             connection = dbOutils.connecter();
             ps = connection.prepareStatement("select * from oeuvre, proprietaire "
-                    + "where oeuvre.id_proprietaire = proprietaire.id_proprietaire ");
+                    + "where oeuvre.id_proprietaire = proprietaire.id_proprietaire "
+                    + "order by id_oeuvre");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -75,6 +76,16 @@ public class OeuvreDao {
         try {
             DbOutils dbOutils = new DbOutils();
             connection = dbOutils.connecter();
+            
+            
+            /**
+             * 
+             * retravailler si F5 ça revoie les donénes du form
+             * 
+             */
+            
+            
+            
             connection.setAutoCommit(false);;
 
             oeuvre.setId_oeuvre(dbOutils.getidentifiant("oeuvre"));
@@ -152,6 +163,25 @@ public class OeuvreDao {
             } catch (Exception e) {
                 e.getMessage();
             }
+        }
+    }
+
+    public void supprimer(int id) throws Exception{
+
+        PreparedStatement ps = null; 
+        ResultSet rs = null; 
+        Connection connection = null; 
+        DbOutils dbOutils = null; 
+        
+        try {
+            dbOutils = new DbOutils(); 
+            connection = dbOutils.connecter(); 
+            ps = connection.prepareStatement("delete from oeuvre where id_oeuvre = ?"); 
+            ps.setInt(1, id);
+            
+            ps.executeUpdate(); 
+            
+        } catch (Exception e) {
         }
     }
 
