@@ -130,6 +130,13 @@ public class slOeuvres extends HttpServlet {
             Oeuvre oeuvre = null;
             oeuvre = oeuvreDao.rechercher(id);
 
+            /**
+             * 
+             * Créer UPDATE
+             * 
+             */
+            
+            
             request.setAttribute("oeuvreR", oeuvre);
 
             List<Proprietaire> lProprietaires = new ArrayList();
