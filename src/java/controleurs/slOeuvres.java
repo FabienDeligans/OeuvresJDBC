@@ -120,13 +120,13 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
 
-            int id = (Integer) request.getAttribute("id"); 
+            int id =  Integer.parseInt(request.getParameter("id")); 
             
             OeuvreDao oeuvreDao = new OeuvreDao(); 
             Oeuvre oeuvre = null; 
             oeuvre = oeuvreDao.rechercher(id); 
             
-            request.setAttribute("OeuvreR", oeuvre);
+            request.setAttribute("oeuvreR", oeuvre);
             
             vueReponse = "/oeuvre.jsp";
             return (vueReponse);

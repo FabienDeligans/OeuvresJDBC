@@ -118,9 +118,7 @@ public class OeuvreDao {
             DbOutils dbOutils = new DbOutils();
             connection = dbOutils.connecter();
 
-            ps = connection.prepareStatement("select * from oeuvre, proprietaire"
-                    + " where id_oeuvre = ? and"
-                    + "oeuvre.id_proprietaire = proprietaire.id_proprietaire");
+            ps = connection.prepareStatement("select * from oeuvre, proprietaire where id_oeuvre = ? and oeuvre.id_proprietaire = proprietaire.id_proprietaire");
             ps.setInt(1, id);
 
             rs = ps.executeQuery();
@@ -130,12 +128,12 @@ public class OeuvreDao {
                 oeuvre.setId_oeuvre(rs.getInt("oeuvre.id_oeuvre"));
                 oeuvre.setId_proprietaire(rs.getInt("oeuvre.id_proprietaire"));
                 oeuvre.setPrix(rs.getDouble("prix"));
-                oeuvre.setTitre(rs.getString("prix"));
+                oeuvre.setTitre(rs.getString("titre"));
 
                 Proprietaire proprio = new Proprietaire();
-                proprio.setId_proprietaire(rs.getInt("proprietaire.id_proprietaire"));
-                proprio.setNom_proprietaire(rs.getString("propretaire.nom_proprietaire"));
-                proprio.setPrenom_proprietaire(rs.getString("proprietaire.prenom_proprietaire"));
+                proprio.setId_proprietaire(rs.getInt("oeuvre.id_proprietaire"));
+                proprio.setNom_proprietaire(rs.getString("nom_proprietaire"));
+                proprio.setPrenom_proprietaire(rs.getString("prenom_proprietaire"));
 
                 oeuvre.setProprietaire(proprio);
 
