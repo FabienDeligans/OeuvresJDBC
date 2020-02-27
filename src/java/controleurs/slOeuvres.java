@@ -90,17 +90,19 @@ public class slOeuvres extends HttpServlet {
     private String enregistrerOeuvre(HttpServletRequest request) throws Exception {
 
         String vueReponse = "/ajouter.oe";
-        String txtTitre, txtPrix, lProprietaires;
+        String txtTitre, txtPrix, lProprietaires; 
+        int id; 
         try {
 
             txtTitre = request.getParameter("txtTitre");
             txtPrix = request.getParameter("txtPrix");
             lProprietaires = request.getParameter("lProprietaires");
-
+            id = Integer.parseInt(request.getParameter("id")); 
+            
             OeuvreDao oeuvreDao = new OeuvreDao();
             
             if (txtTitre != null && txtPrix != null && lProprietaires != null) {
-                oeuvreDao.ajouter(txtTitre, txtPrix, lProprietaires);
+                oeuvreDao.ajouter(txtTitre, txtPrix, lProprietaires, id);
 
                 vueReponse = "/catalogue.oe";
                 
@@ -128,14 +130,7 @@ public class slOeuvres extends HttpServlet {
 
             OeuvreDao oeuvreDao = new OeuvreDao();
             Oeuvre oeuvre = null;
-            oeuvre = oeuvreDao.rechercher(id);
-
-            /**
-             * 
-             * Créer UPDATE
-             * 
-             */
-            
+            oeuvre = oeuvreDao.rechercher(id);           
             
             request.setAttribute("oeuvreR", oeuvre);
 

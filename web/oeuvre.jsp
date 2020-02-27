@@ -6,6 +6,12 @@
             <label class="col-md-3 control-label">Titre : </label>
             <div class="col-md-6">
                 <input type="text" name="txtTitre" value="${oeuvreR.titre}" class="form-control" placeholder="Titre de l'oeuvre" required autofocus>
+                <c:if test="${oeuvreR.id_oeuvre != null}">
+                    <input type="text" name="id" value="${oeuvreR.id_oeuvre}">
+                </c:if>
+                <c:if test="${oeuvreR.id_oeuvre == null}">
+                    <input type="text" name="id" value=0>
+                </c:if>
             </div>
         </div>
         <div class="form-group">
