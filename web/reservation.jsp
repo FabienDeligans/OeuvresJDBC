@@ -7,17 +7,18 @@
             <label class="col-md-3 control-label">Titre : </label>
             <label class="col-md-6 form-control-static" name="txtTitre" >${resaR.oeuvre.titre}</label>
             <input type="text" name="id_oeuvre" id="id_oeuvre" value="${resaR.oeuvre.id_oeuvre}" hidden/>
+            <input type="text" name="txtTitre" id="txtTitre" value="${resaR.oeuvre.titre}" hidden/>
 
         </div>
         <div class="form-group">
             <label class="col-md-3 control-label">Prix : </label>
             <label class="col-md-6 form-control-static" name="txtPrix" >${resaR.oeuvre.prix}</label>
-            <input type="text" name="txtTitre" id="txtTitre" value="${resaR.oeuvre.prix}" hidden/>
+            <input type="text" name="txtPrix" id="txtPrix" value="${resaR.oeuvre.prix}" hidden/>
         </div>
         <div class="form-group">
             <label class="col-md-3 control-label">Date réservation : </label>
             <div class="col-md-3">
-                <input type="text" name="txtDate" id="txtDate" value="" class="form-control" placeholder="AAAA-MM-JJ" required/>
+                <input type="text" name="txtDate" id="txtDate" value="${now}" class="form-control" placeholder="AAAA-MM-JJ" required/>
             </div>
         </div>            
         <div class="form-group">

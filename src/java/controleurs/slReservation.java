@@ -73,9 +73,16 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String confirmerReservation(HttpServletRequest request) throws Exception {
-
+        String id, date; 
         try {
 
+            id = request.getParameter("id"); 
+            date = request.getParameter("dateres");
+            ancienneDate = request.getParameter(date)
+            
+            ReservationDao resaDao = new ReservationDao(); 
+            resaDao.update(id, date); 
+            
             return ("listeReservations.res");
         } catch (Exception e) {
             throw e;
@@ -132,20 +139,20 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
+        String id_oeuvre;
+        String id_adherent;
+        String date;
 
+        id_oeuvre = request.getParameter("id_oeuvre");
+        id_adherent = request.getParameter("lstAdherents");
+        date = request.getParameter("txtDate");
+        titre = request.getParameter("txtTitre");
+        
         try {
 
-            String id_oeuvre; 
-            String id_adherent; 
-            String date; 
-            
-            id_oeuvre = request.getParameter("id_oeuvre"); 
-            id_adherent = request.getParameter("lstAdherents"); 
-            date = request.getParameter("txtDate"); 
-            
-            ReservationDao resaDao = new ReservationDao(); 
-            resaDao.enregistrer(id_oeuvre, id_adherent, date); 
-            
+            ReservationDao resaDao = new ReservationDao();
+            resaDao.enregistrer(id_oeuvre, id_adherent, date);
+
             return ("listeReservations.res");
         } catch (Exception e) {
             erreur = e.getMessage();
@@ -168,21 +175,22 @@ public class slReservation extends HttpServlet {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
 
-            OeuvreDao oeuvreDao = new OeuvreDao(); 
+            OeuvreDao oeuvreDao = new OeuvreDao();
             Oeuvre oeuvre = new Oeuvre();
-            oeuvre = oeuvreDao.rechercher(id); 
+            oeuvre = oeuvreDao.rechercher(id);
 
-            Reservation resa = new Reservation(); 
+            Reservation resa = new Reservation();
             resa.setId_oeuvre(id);
             resa.setOeuvre(oeuvre);
-            
+
             request.setAttribute("resaR", resa);
+            request.setAttribute("oeuvreR", oeuvre);
 
             List<Adherent> lAdherents = new ArrayList();
             AdherentDao adhDao = new AdherentDao();
             lAdherents = adhDao.lister(lAdherents);
             request.setAttribute("lAdherentsR", lAdherents);
-            
+
             return ("/reservation.jsp");
         } catch (Exception e) {
             throw e;
