@@ -84,7 +84,7 @@ public class OeuvreDao {
              *
              */
             
-            connection.setAutoCommit(false);;
+            connection.setAutoCommit(false);
 
             oeuvre.setId_proprietaire(Integer.parseInt(lProprietaires));
             oeuvre.setPrix(Double.parseDouble(txtPrix));

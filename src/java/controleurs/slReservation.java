@@ -77,8 +77,7 @@ public class slReservation extends HttpServlet {
         try {
 
             id = request.getParameter("id"); 
-            date = request.getParameter("dateres");
-            ancienneDate = request.getParameter(date)
+            date = request.getParameter("date");
             
             ReservationDao resaDao = new ReservationDao(); 
             resaDao.update(id, date); 
@@ -90,9 +89,15 @@ public class slReservation extends HttpServlet {
     }
 
     private String supprimerReservation(HttpServletRequest request) throws Exception {
-
+        String id, date; 
         try {
-
+            
+            id = request.getParameter("id"); 
+            date = request.getParameter("date");
+            
+            ReservationDao resaDao = new ReservationDao(); 
+            resaDao.supprimer(id, date); 
+            
             return ("listeReservations.res");
         } catch (Exception e) {
             throw e;

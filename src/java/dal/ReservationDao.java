@@ -80,32 +80,32 @@ public class ReservationDao {
         }
     }
 
-    public void enregistrer(String id_oeuvre, String id_adherent, String date) throws Exception{
+    public void enregistrer(String id_oeuvre, String id_adherent, String date) throws Exception {
 
         PreparedStatement ps = null;
         Connection connection = null;
         try {
-            
+
             DbOutils dbOutils = new DbOutils();
             connection = dbOutils.connecter();
             connection.setAutoCommit(false);
 
             ps = connection.prepareStatement("insert into reservation (date_reservation, id_oeuvre, id_adherent, statut) values(?, ?, ?, ?)");
-            
-            java.util.Date laDateResa = Utilitaire.StrToDate(date, "yyyy-MM-dd"); 
-            java.sql.Date datte = new java.sql.Date(laDateResa.getTime()); 
-            
+
+            java.util.Date laDateResa = Utilitaire.StrToDate(date, "yyyy-MM-dd");
+            java.sql.Date datte = new java.sql.Date(laDateResa.getTime());
+
             ps.setDate(1, datte);
             ps.setInt(2, Integer.parseInt(id_oeuvre));
             ps.setInt(3, Integer.parseInt(id_adherent));
             ps.setString(4, "Attente");
-            
-            ps.executeUpdate(); 
-            connection.commit(); 
+
+            ps.executeUpdate();
+            connection.commit();
 
         } catch (Exception e) {
             connection.rollback();
-            throw e; 
+            throw e;
         } finally {
             try {
                 if (ps != null) {
@@ -121,16 +121,80 @@ public class ReservationDao {
 
     }
 
-    public void update(String id, String date) throws Exception{
+    public void update(String id, String date) throws Exception {
 
-        PreparedStatement ps = null; 
-        Connection connection  = null; 
+        PreparedStatement ps = null;
+        Connection connection = null;
+        DbOutils dbOutils = new DbOutils();
+
         try {
-            DbOutils dbOutils = new DbOutils(); 
-            dbOutils.connecter(); 
-            ps = connection.prepareStatement("update reservation set date_reservation = ?, statut = ? where "); 
+
+            connection = dbOutils.connecter();
+            connection.setAutoCommit(false);
+
+            java.util.Date laDateResa = Utilitaire.StrToDate(date, "yyyy-MM-dd");
+            java.sql.Date datte = new java.sql.Date(laDateResa.getTime());
+
+            ps = connection.prepareStatement("update reservation set statut = ? where date_reservation = ? and id_oeuvre = ?");
+            ps.setString(1, "Confirmée");
+            ps.setDate(2, datte);
+            ps.setInt(3, Integer.parseInt(id));
+
+            ps.executeUpdate();
+            connection.commit();
+
         } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+    }
+
+    public void supprimer(String id, String date) throws Exception {
+
+        PreparedStatement ps = null;
+        Connection connection = null;
+        DbOutils dboutils = null;
+
+        try {
+            dboutils = new DbOutils();
+            connection = dboutils.connecter();
+            connection.setAutoCommit(false);
+
+            java.util.Date laDateResa = Utilitaire.StrToDate(date, "yyyy-MM-dd");
+            java.sql.Date datte = new java.sql.Date(laDateResa.getTime());
+
+            ps = connection.prepareStatement("delete from reservation where id_oeuvre = ? and date_reservation = ? ");
+            ps.setInt(1, Integer.parseInt(id));
+            ps.setDate(2, datte);
             
+            ps.executeUpdate(); 
+            connection.commit();
+            
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
     }
 

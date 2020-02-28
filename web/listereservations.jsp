@@ -26,10 +26,8 @@
                     <c:if test="${userId == 1 }">
                         <td>${lst.getAdherent().prenom_adherent}</td>
                         <td>${lst.getAdherent().nom_adherent}</td>
-                        <c:if test="${lst.statut != Confirmée}">
-                            <td><a class="btn btn-primary" href="confirmerReservation.res?id=${lst.id_oeuvre}&dateres='<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
-                        </c:if>
-                        <td><a class="btn btn-primary" href="supprimerReservation.res?id=${lst.id_oeuvre}&dateres='<fmt:formatDate value="${now}" type="date" pattern="yyyy-MM-dd"/>'">Supprimer</a></td>                    
+                        <td><a class="btn btn-primary" href="confirmerReservation.res?id=${lst.id_oeuvre}&date=<fmt:formatDate value="${lst.date_reservation}" type="date" pattern="yyyy-MM-dd"/>">Confirmer</a></td>
+                        <td><a class="btn btn-primary" href="supprimerReservation.res?id=${lst.id_oeuvre}&date=<fmt:formatDate value="${lst.date_reservation}" type="date" pattern="yyyy-MM-dd"/>">Supprimer</a></td>                    
                     </c:if>
 
                 </tr>
